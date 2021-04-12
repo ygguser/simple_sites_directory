@@ -9,3 +9,6 @@ How to start using it:
  * Configure the web server. [Here](nginx/sites_dir.conf) is an example of the nginx web server configuration file
  * Give the web server write access to this directory and and write access to the `database.db` file
  * Add a cron job: `0 */1 * * * /path/to/sites_dir/checkavailability.sh >/dev/null 2>&1` (hourly site availability check and html files regeneration)
+ * The permissions for the files `site/index.html*`, `site/categories.html*` must be that they can be changed from both the cron job and the web server 
+
+These scripts are currently used on the Yggdrasil network at this address: http://[300:529f:150c:eafe::1]/
