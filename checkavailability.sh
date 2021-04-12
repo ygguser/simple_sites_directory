@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#sleep 5m;
+
 function checkURL() { #$1 - URL, $2 - method (1 - HEAD else - GET)
     if [ "$2" = 1 ]
     then
@@ -27,9 +29,9 @@ if [ ! -f "$PATHTODB" ]; then echo 'Database file not found!'; exit 1; fi
 DATATOCHECK=$(sqlite3 "$PATHTODB" 'select URL from Sites;')
 #first make HEAD requests, then GET (Not all services respond correctly to the HEAD request (for ex: icecast))
 UNAVAILABLE_HEAD_REQ=$(echo "$DATATOCHECK" | parallel -j 16 checkURL {1} 1)
-if [ ! -z "$UNAVAILABLE_GET_REQ" ]
+if [ ! -z "$UNAVAILABLE_HEAD_REQ" ]
 then
-    UNAVAILABLE_GET_REQ=$(echo "$DATATOCHECK" | parallel -j 16 checkURL {1} 0)
+    UNAVAILABLE_GET_REQ=$(echo "$UNAVAILABLE_HEAD_REQ" | parallel -j 16 checkURL {1} 0)
 else
     UNAVAILABLE_GET_REQ="$UNAVAILABLE_HEAD_REQ"
 fi
