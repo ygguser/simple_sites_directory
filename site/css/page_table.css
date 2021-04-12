@@ -1,0 +1,95 @@
+BODY {
+    font-family: sans-serif, Verdana, Arial, Helvetica;
+    background-color: #f9f9f9;
+    color: #333333;
+}
+
+TABLE {
+	border: 1px solid black;
+    font-family: sans-serif, Verdana, Arial, Helvetica;
+	font-size: 80%;
+	border-collapse: collapse;
+    width: 100%;
+}
+TR:nth-child(even) {
+   	background: #f7f7f7;
+}
+TD, TH {
+	padding: 3px;
+   	border: 1px solid black;
+    vertical-align: middle;
+}
+TH {
+    word-break: normal;
+    min-width: 160;
+}
+TD.addr {
+	width: 340px;
+	word-wrap: break-word;
+	hyphens: auto;
+	word-break: break-word;
+    letter-spacing: 0.0001em;
+}
+@-moz-document url-prefix() {
+    TD.addr {
+        font-stretch: ultra-condensed;
+        width: 340px;
+    }
+}
+TD.uptime {
+    text-align: center;
+    width: 60px;
+}
+TD.dname {
+//  width: 400px;
+//  word-wrap: break-word;
+    hyphens: auto;
+//  word-break: break-word;
+//  font-stretch: ultra-condensed;
+    letter-spacing:0.0001em;
+    text-align: center;
+}
+TD.descr {
+    //width: 580px;
+    filter: grayscale(100%);
+    //color: gray;
+}
+TD.OnlineAt {
+	width: 210px;
+	text-align: center;
+    font-stretch: ultra-condensed;
+    letter-spacing:0.0001em;
+}
+TH {
+   	text-align: center;
+   	background: lightgray;
+}
+DIV.n0rma1 {
+	text-decoration: none;	
+}
+DIV.unavai1ab1e {
+   	text-decoration: line-through;	
+}
+DIV.page {
+//	width: 1200px;
+   	text-align: center;
+	margin: 0% 1%;
+}
+A.black:link {
+   	//color: #000000;
+    color: #333;
+	text-decoration: none;
+}
+A.black:visited {
+   	//color: #000000;
+    color: #333;
+   	text-decoration: none;
+}
+A.black:hover {
+   	color: #ff0000;
+    //color: #333;
+   	text-decoration: underline;
+}
+a.u:link {
+    text-decoration: underline;
+}
