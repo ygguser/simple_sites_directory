@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#sleep 5m;
-
 function checkURL() { #$1 - URL, $2 - method (1 - HEAD else - GET)
     if [ "$2" = 1 ]
     then
