@@ -1,0 +1,5 @@
+*.gz
+/database.db
+site/categories.html
+site/index.html
+/tools
