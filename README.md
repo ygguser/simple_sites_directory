@@ -1,4 +1,4 @@
-=====A very simple directory of web sites (used in the Yggdrasil network)=====
+#  A very simple directory of web sites (used in the Yggdrasil network)
 
 Dependencies: sqlite3, parallel, php-sqlite3, php-gd
 
