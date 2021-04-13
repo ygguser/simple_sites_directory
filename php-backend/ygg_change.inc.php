@@ -44,10 +44,17 @@ echo '}';
 echo '</style>';
 echo '</head><body style="background-color: #f5f5f0; font-family: sans-serif, Verdana, Arial, Helvetica;">';
 
+$db_file= './../database.db';
+if (!file_exists("$db_file")) {
+    echo 'The DB file doesn\'t exist!';
+    page_end();
+}
 try {
-    $db = new SQLite3('./../database.db', SQLITE3_OPEN_READWRITE);
-} catch (Exception $exception) {
-    echo 'Can\'t open database!';
+    $db = new PDO("sqlite:$db_file");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Can\'t open database!<br>';
+    echo $e->getMessage();
     page_end();
 }
 
@@ -108,15 +115,21 @@ if ($addr_OK === false) {
 	page_end();
 }
 
-$query = "SELECT ID FROM Sites WHERE URL = '$url' LIMIT 1;";
-$result = $db->query("$query");
-$site_found = false;
-$siteID = '';
-while ($row = $result->fetchArray()) {
-    $site_found = true;
-    $siteID = "{$row['ID']}"; 
-    $site_found = true; break;
+$siteID = ''; $site_found = false;
+try {
+    $query = $db->prepare('SELECT ID AS SiteID FROM Sites WHERE URL = :url LIMIT 1;');
+    $query->bindParam(':url', $url);
+    $query->execute();
+    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+        $siteID = "{$row['SiteID']}"; $site_found = true; break;
+
+    }
+} catch (PDOException $e) {
+    echo 'Something went wrong. Please contact the site administrator.';
+    echo '<br>' . $e->getMessage() . '<br>';
+    page_end();
 }
+
 if (!$site_found) {
     echo "The catalog does not contain a site with the address $url.";
 	page_end();
@@ -137,8 +150,19 @@ if(!strpos($urlHeaders[0], '200')) {
 
 // If the request is for deletion, delete
 if ($delete) {
-    $query = "PRAGMA foreign_keys = ON; DELETE FROM Sites WHERE ID = '$siteID';";
-    $db->exec("$query");
+    try {
+        $db->beginTransaction();
+        $db->exec('PRAGMA foreign_keys = ON;');
+        $query = $db->prepare('DELETE FROM Sites WHERE ID = :SiteID;');
+        $query->bindParam(':SiteID', $siteID);
+        $query->execute();
+        $db->commit();
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
+    }
+    
     echo 'The deletion request was successfully completed. After a while, the site will disappear from the list.<br><a class="black" href="/">Return</a> to the main page.';
     regen_and_notify($url, $description, true);
     page_end();
@@ -149,7 +173,7 @@ $dname = str_replace(array("\n", "\r"), '', $dname);
 $dname = escapeshellcmd($dname);
 
 ////check domain resolv
-//if ($dname != '' && !$delete) {
+//if ($dname != '') {
 //    $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @301:2923::53 $dname +short"));
 //    if ($output == '') {
 //        echo "The domain name cannot be resolved, it may not be registered yet. Try specifying it later.";
@@ -166,36 +190,55 @@ $dname = escapeshellcmd($dname);
 //    }
 //}
 
-$available = "1";
-
 $dt = date("Y-m-d\ H:i:s");
 
-// update record
-$query = "BEGIN TRANSACTION; UPDATE Sites SET ALFIS_DName = '$dname', Description = '$description' WHERE ID = '$siteID'; DELETE FROM SitesCategories WHERE Site = '$siteID';";
-
-// update categories
+//update record (first determine whether the categories are passed)
+$categCount = 0;
 if (isset($_POST['categories'])) {
     $categories_in_DB = array();
-    $query_c = 'SELECT ID FROM Categories;';
-    $result = $db->query("$query_c");
-    while ($row = $result->fetchArray()) {
-        $categories_in_DB[] = "{$row['ID']}";
+    try {
+        $query = $db->query('SELECT ID FROM Categories;');
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $categories_in_DB[] = "{$row['ID']}";
+        }
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
     }
     $categ = $_POST['categories'];
     $categCount = count($categ);
+}
+
+// update record
+try {
+    $db->beginTransaction();
+    $query = $db->prepare('UPDATE Sites SET ALFIS_DName = :DName, Description = :Description WHERE ID = :SiteID;');
+    $query->bindParam(':SiteID', $siteID);
+    $query->bindParam(':DName', $dname);
+    $query->bindParam(':Description', $description);
+    $query->execute();
+    $query = $db->prepare('DELETE FROM SitesCategories WHERE Site = :SiteID;');
+    $query->bindParam(':SiteID', $siteID);
+    $query->execute();
     if ($categCount > 0) {
         for($i = 0; $i < $categCount; $i++) {
             if (in_array($categ[$i], $categories_in_DB)) {
-                $query .= "INSERT INTO SitesCategories (Site, Category) VALUES ('$siteID', '{$categ[$i]}');";
+                $query = $db->prepare('INSERT INTO SitesCategories (Site, Category) VALUES (:SiteID, :CategoryID)');
+                $query->bindValue(":SiteID", $siteID, PDO::PARAM_INT);
+                $query->bindValue(":CategoryID", $categ[$i], PDO::PARAM_INT);
+                $query->execute();
             }
         }
     }
-}
-$query .= " COMMIT;";
-if (!$db->exec("$query")) {
+    $db->commit();
+} catch (PDOException $e) {
     echo 'Something went wrong. Please contact the site administrator.';
+    echo '<br>' . $e->getMessage() . '<br>';
     page_end();
 }
+
+$db = null;// close DB connection
 
 echo 'The data was changed successfully! After a while, the list will be updated.<br>The file ' . $_SESSION['rndfname'] . ' can be deleted.<br><a class="black" href="/">Return</a> to the main page.';
 

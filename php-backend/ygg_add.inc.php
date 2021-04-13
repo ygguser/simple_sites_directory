@@ -25,10 +25,17 @@ echo '}';
 echo '</style>';
 echo '</head><body style="background-color: #f5f5f0; font-family: sans-serif, Verdana, Arial, Helvetica;">';
 
+$db_file= './../database.db';
+if (!file_exists("$db_file")) {
+    echo 'The DB file doesn\'t exist!';
+    page_end();
+}
 try {
-    $db = new SQLite3('./../database.db', SQLITE3_OPEN_READWRITE);
-} catch (Exception $exception) { 
-    echo 'Can\'t open database!';
+    $db = new PDO("sqlite:$db_file");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) { 
+    echo 'Can\'t open database!<br>';
+    echo $e->getMessage();
     page_end();
 }
 
@@ -105,22 +112,32 @@ if ($addr_OK === false) {
 }
 
 if ($dname == '') {
-    $query = 'SELECT ID FROM Sites WHERE URL LIKE \'' . preg_replace('{/$}', '', $url)  . '%\''; // preg_replace - to remove a slash at the end of a line
-    $result = $db->query("$query");
+    $url_p = preg_replace('{/$}', '', $url) . '%';
     $nrows = 0;
-    while ($result->fetchArray()) {
-        $nrows++; break;
+    try {
+        $query = $db->prepare('SELECT ID FROM Sites WHERE URL LIKE :url LIMIT 1;');
+        $query->bindParam(':url', $url_p);
+        $query->execute();
+        $nrows = count($query->fetchAll());
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
     }
     if ($nrows > 0) {
         echo 'The site is already contained in the catalog!';
         page_end();
     }
 } else { // $dname != ''
-    $query = 'SELECT ID FROM Sites WHERE ALFIS_DName=\'' . $dname . '\'';
-    $result = $db->query("$query");
-    $nrows = 0;
-    while ($result->fetchArray()) {
-        $nrows++; break;
+    try {
+        $query = $db->prepare('SELECT ID FROM Sites WHERE URL = :dname LIMIT 1;');
+        $query->bindParam(':dname', $dname);
+        $query->execute();
+        $nrows = count($q->fetchAll());
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
     }
     if ($nrows > 0) {
         echo 'The site is already contained in the catalog!';
@@ -128,44 +145,66 @@ if ($dname == '') {
     }
 }
 
-$msgAddition=' After a while, it will appear in the list.<br>';
-$available = '1';
-
 $dt = date("Y-m-d\ H:i:s");
 
 //add site to DB
-$query = "INSERT INTO Sites (URL, Description, Available, Wyrd_DName, ALFIS_DName, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES ('$url', '$description', '$available', '', '$dname', '$dt', 0, 0);";
-if (!$db->exec("$query")) {
+try {
+    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, Wyrd_DName, ALFIS_DName, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, "",:dname, :date, 0, 0);');
+    $query->bindValue(':url', $url, PDO::PARAM_STR);
+    $query->bindValue(':description', $description, PDO::PARAM_STR);
+    $query->bindValue(':dname', $dname, PDO::PARAM_STR);
+    $query->bindValue(':date', $dt, PDO::PARAM_STR);
+    $query->execute();
+    //$query = $db->query('SELECT last_insert_rowid() AS SiteID;');
+    //while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+    //    $siteID = "{$row['SiteID']}"; break;
+    //}
+    $siteID = $db->lastInsertId();
+} catch (PDOException $e) {
     echo 'Something went wrong. Please contact the site administrator.';
+    echo '<br>' . $e->getMessage() . '<br>';
     page_end();
-}
-$query = "SELECT last_insert_rowid() AS SiteID;";
-$result = $db->query("$query");
-while ($row = $result->fetchArray()) {
-    $siteID = "{$row['SiteID']}"; break;
 }
 
 if (isset($_POST['categories'])) {
     $categories_in_DB = array();
-    $query = 'SELECT ID FROM Categories;';
-    $result = $db->query("$query");
-    while ($row = $result->fetchArray()) {
-        $categories_in_DB[] = "{$row['ID']}";
+    try {
+        $query = $db->query('SELECT ID FROM Categories;');
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $categories_in_DB[] = "{$row['ID']}";
+        }
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
     }
     $categ = $_POST['categories'];
     $categCount = count($categ);
-    $query = '';
+    $query_string = '';
     if ($categCount > 0) {
-        for($i = 0; $i < $categCount; $i++) {
-            if (in_array($categ[$i], $categories_in_DB)) {
-                $query .= "INSERT INTO SitesCategories (Site, Category) VALUES ('$siteID', '{$categ[$i]}');";
+        try {
+            $db->beginTransaction();
+            $query = $db->prepare('INSERT INTO SitesCategories (Site, Category) VALUES (:SiteID, :CategoryID)');
+            for($i = 0; $i < $categCount; $i++) {
+                if (in_array($categ[$i], $categories_in_DB)) {
+                    $query->bindValue(":SiteID", $siteID, PDO::PARAM_INT);
+                    $query->bindValue(":CategoryID", $categ[$i], PDO::PARAM_INT);
+                    $query->execute();
+                }
             }
+            $db->commit();
+        } catch (PDOException $e) {
+            $db->rollback();
+            echo 'Something went wrong. Please contact the site administrator.';
+            echo '<br>' . $e->getMessage() . '<br>';
+            page_end();
         }
-        $db->exec("$query");    
     }
 }
 
-echo "The site was successfully added!$msgAddition<a class=\"black\" href=\"/\">Return</a> to the main page.";
+$db = null;// close DB connection
+
+echo "The site was successfully added! After a while, it will appear in the list.<br><a class=\"black\" href=\"/\">Return</a> to the main page.";
 
 //regenerate HTML in background
 list($scriptPath) = get_included_files();
