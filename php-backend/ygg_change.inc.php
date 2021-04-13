@@ -103,8 +103,7 @@ if (substr($url, 0, 7) != 'http://' && substr($url, 0, 8) != 'https://' && subst
 preg_match_all("/\[([^\]]*)\]/", $url, $matches);
 $addr_OK = false;
 $ip = reset($matches[1]);
-//echo $ip;
-//echo var_dump($matches);
+
 if ($ip !== false ) {
 	if ((inet_pton($ip) !== false) && true) {
 		$addr_OK = true;
