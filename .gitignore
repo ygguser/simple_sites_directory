@@ -1,5 +1,6 @@
 *.gz
 /database.db
+php-backend/ygg_telegram_notify.php
 site/categories.html
 site/index.html
 /tools
