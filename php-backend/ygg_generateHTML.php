@@ -97,7 +97,7 @@ $(document).bind("mobileinit", function () {
 <div class="page"><h1>Yggdrasil Web directory</h1>
 EOL;
 $page_middle = <<<EOL
-<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="1">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=en:yggdrasil:wyrd_register" class="black u" >Wyrd</a>)</th><th data-priority="1">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" class="black u" >ALFIS</a>)</th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
+<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=en:yggdrasil:wyrd_register" class="black u" >Wyrd</a>)</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" class="black u" >ALFIS</a>)</th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
 <tbody>
 EOL;
 $page_bottom = <<<EOL
