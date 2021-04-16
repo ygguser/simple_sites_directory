@@ -130,10 +130,10 @@ if ($dname == '') {
     }
 } else { // $dname != ''
     try {
-        $query = $db->prepare('SELECT ID FROM Sites WHERE URL = :dname LIMIT 1;');
+        $query = $db->prepare('SELECT ID FROM Sites WHERE ALFIS_DName = :dname LIMIT 1;');
         $query->bindParam(':dname', $dname);
         $query->execute();
-        $nrows = count($q->fetchAll());
+        $nrows = count($query->fetchAll());
     } catch (PDOException $e) {
         echo 'Something went wrong. Please contact the site administrator.';
         echo '<br>' . $e->getMessage() . '<br>';
