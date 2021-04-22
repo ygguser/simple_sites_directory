@@ -7,7 +7,7 @@ How to start using it:
  * Copy the contents of this repository to your web server
  * Inside the directory where the contents of this repository are located, create a database named `database.db` using this script: [database_schema.sql](database_schema.sql) (or copy this database: [database.db](db_example/database.db))
  * Configure the web server. [Here](nginx/sites_dir.conf) is an example of the nginx web server configuration file
- * Give the web server write access to this directory and and write access to the `database.db` file
+ * Give the web server write access to this directory and write access to the `database.db` file
  * Add a cron job: `0 */1 * * * /path/to/sites_dir/checkavailability.sh >/dev/null 2>&1` (hourly site availability check and html files regeneration)
  * The permissions for the files `site/index.html*`, `site/categories.html*` must be that they can be changed from both the cron job and the web server 
  * If you want to receive notifications about changes in the list of sites in telegram, fill in the parameters in the file `php-backend/ygg_telegram_notify.php`
