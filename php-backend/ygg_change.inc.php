@@ -135,15 +135,23 @@ if (!$site_found) {
 }
 
 // Checking if the file exists
-if (substr("$url", -1) == '/') {
-    $urltocheck = "$url" . $_SESSION['rndfname'];
-} else {
-    $urltocheck = "$url" . '/' . $_SESSION['rndfname'];
+if (!isset($_SESSION['rndfname'])) {
+    echo "Can't get the random file name from _SESSION.";
+    page_end();
 }
-$urlHeaders = @get_headers($urltocheck);
+$parsed_url = parse_url($url);
+if ($parsed_url) {
+    $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+    $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+    $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+    $url_to_check = "$scheme$host$port/" . $_SESSION['rndfname'];
+} else {
+    $url_to_check = "$url" . $_SESSION['rndfname'];
+}
+$urlHeaders = @get_headers($url_to_check);
 // check the server response (it should be 200-OK)
 if(!strpos($urlHeaders[0], '200')) {
-    echo "The file <a href=\"$urltocheck\" class=\"black\" target=\"_blank\">$urltocheck</a> doesn't exist.";
+    echo "The file <a href=\"$url_to_check\" class=\"black\" target=\"_blank\">$url_to_check</a> doesn't exist.";
     page_end();
 }
 
