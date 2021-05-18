@@ -59,6 +59,9 @@ echo "$rndfname";
 <td>URL:</td><td><input type="text" name="url" maxlength="500" placeholder="http://[xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx]" value=""> <font color="red">*</font></td>
 </tr>
 <tr>
+<td><td><input type="checkbox" name="deletesite"> Delete this site from the list.</td>
+</tr>
+<tr>
 <td>Description:</td><td><input type="text" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <font color="red">*</font></td>
 </tr>
 <tr>
@@ -73,9 +76,6 @@ while ($row = $result->fetchArray()) {
 }
 ?>
 </select></td>
-</tr>
-<tr>
-<td><td><input type="checkbox" name="deletesite"> Delete this site from the list.</td>
 </tr>
 <tr>
 <td><img src="captcha.php"></td><td><input type="text" name="code" maxlength="5" placeholder="verification code" value=""> <font color="red">*</font></td>
