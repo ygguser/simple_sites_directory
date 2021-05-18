@@ -55,32 +55,30 @@ echo "$rndfname";
 <p>Then, without reloading this page, you need to fill out and submit this form.</p>
 <form method="post" action="change.php">
 <table>
-<tr>
-<td>URL:</td><td><input type="text" name="url" maxlength="500" placeholder="http://[xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx]" value=""> <font color="red">*</font></td>
-</tr>
-<tr>
-<td><td><input type="checkbox" name="deletesite"> Delete this site from the list.</td>
-</tr>
-<tr>
-<td>Description:</td><td><input type="text" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <font color="red">*</font></td>
-</tr>
-<tr>
-<td>Domain name (<a class="black" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
-</tr>
-<tr>
-<td>Categories:</td>
-<?php
-echo '<td><select multiple name="categories[]" size="' . $nrows . '">';
-while ($row = $result->fetchArray()) {
-        echo '<option value="' . $row['ID'] . '">'. $row['Name'] . '</option>';
-}
-?>
-</select></td>
-</tr>
-<tr>
-<td><img src="captcha.php"></td><td><input type="text" name="code" maxlength="5" placeholder="verification code" value=""> <font color="red">*</font></td>
-</tr>
-<tr><td></td><td><input type="submit" name="submit" value="Change data"></td></tr>
+    <tr>
+        <td>URL:</td><td><input type="text" name="url" maxlength="500" placeholder="http://[xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx]" value=""> <font color="red">*</font></td>
+    </tr>
+    <tr><td><td><input type="checkbox" name="deletesite"> Delete this site from the list.</td></tr>
+    <tr>
+        <td>Description:</td><td><input type="text" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <font color="red">*</font></td>
+    </tr>
+    <tr>
+        <td>Domain name (<a class="black" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
+    </tr>
+    <tr>
+        <td>Categories:</td>
+        <?php
+            echo '<td><select multiple name="categories[]" size="' . $nrows . '">';
+            while ($row = $result->fetchArray()) {
+                echo '<option value="' . $row['ID'] . '">'. $row['Name'] . '</option>';
+            }
+        ?>
+        </select></td>
+    </tr>
+    <tr>
+        <td><img src="captcha.php"></td><td><input type="text" name="code" maxlength="5" placeholder="verification code" value=""> <font color="red">*</font></td>
+    </tr>
+    <tr><td></td><td><input type="submit" name="submit" value="Change data"></td></tr>
 </table>
 </form>
 </div>
