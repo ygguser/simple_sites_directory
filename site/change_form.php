@@ -5,6 +5,7 @@
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="description" content="Web server addresses on the Yggdrasil network">
+<script src="js/change_form.js"></script>
 <style>
     input[type='text'], select {
         width: 450px;
@@ -58,17 +59,17 @@ echo "$rndfname";
     <tr>
         <td>URL:</td><td><input type="text" name="url" maxlength="500" placeholder="http://[xxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx]" value=""> <font color="red">*</font></td>
     </tr>
-    <tr><td><td><input type="checkbox" name="deletesite"> Delete this site from the list.</td></tr>
+    <tr><td><td><input type="checkbox" name="deletesite" onclick="deletesiteClick(this);"> Delete this site from the list.</td></tr>
     <tr>
-        <td>Description:</td><td><input type="text" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <font color="red">*</font></td>
+        <td>Description:</td><td><input type="text" id="input_description" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <div style="display: inline;" id="descr_necess_mark"><font color="red">*</font></div></td>
     </tr>
     <tr>
-        <td>Domain name (<a class="black" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
+        <td>Domain name (<a class="black" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" id="input_domain" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
     </tr>
     <tr>
-        <td>Categories:</td>
+        <td>Categories (<a class="black" href="javascript:void(0);" onclick='document.getElementById("select_categories").selectedIndex = -1;'>&#10007;</a>):</td>
         <?php
-            echo '<td><select multiple name="categories[]" size="' . $nrows . '">';
+            echo '<td><select multiple id="select_categories" name="categories[]" size="' . $nrows . '">';
             while ($row = $result->fetchArray()) {
                 echo '<option value="' . $row['ID'] . '">'. $row['Name'] . '</option>';
             }
