@@ -3,7 +3,7 @@
 Dependencies: curl, sqlite3, parallel, php-sqlite3, php-gd
 
 How to start using it:
- * Install dependencies (`sudo apt install curl sqlite3 parallel php-sqlite3 php-gd php-curl`); Note that after installing GNU Parallel, you need to run it for the first time with the `--citation` parameter to hide the extra output
+ * Install dependencies (`sudo apt install curl sqlite3 parallel php-sqlite3 php-gd`); Note that after installing GNU Parallel, you need to run it for the first time with the `--citation` parameter to hide the extra output
  * Copy the contents of this repository to your web server
  * Inside the directory where the contents of this repository are located, create a database named `database.db` using this script: [database_schema.sql](database_schema.sql) (or copy this database: [database.db](db_example/database.db))
  * Configure the web server. [Here](nginx/sites_dir.conf) is an example of the nginx web server configuration file
