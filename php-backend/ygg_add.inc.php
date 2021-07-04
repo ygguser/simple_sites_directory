@@ -149,7 +149,7 @@ $dt = date("Y-m-d\ H:i:s");
 
 //add site to DB
 try {
-    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, Wyrd_DName, ALFIS_DName, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, "",:dname, :date, 0, 0);');
+    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, ALFIS_DName, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, :dname, :date, 0, 0);');
     $query->bindValue(':url', $url, PDO::PARAM_STR);
     $query->bindValue(':description', $description, PDO::PARAM_STR);
     $query->bindValue(':dname', $dname, PDO::PARAM_STR);
