@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS "Sites" (
 	"ID"	INTEGER,
 	"URL"	TEXT NOT NULL,
 	"Description"	TEXT,
-	"Wyrd_DName"	TEXT,
 	"ALFIS_DName"	TEXT,
 	"Available"	INTEGER NOT NULL,
 	"AvailabilityDate"	TEXT,
