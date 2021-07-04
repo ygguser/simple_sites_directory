@@ -94,10 +94,10 @@ $(document).bind("mobileinit", function () {
 <body>
 <!--<img width="400px" src="pic/new_year.png" style="position: absolute; z-index: 1; top: 0px; left: 0px;">
 <div style="height: 30px; background: url(pic/garland.gif) repeat-x 100%;"></div>//-->
-<div class="page"><h1>Yggdrasil Web directory</h1>
+<div class="page"><h1>Yggdrasil <font color="green">v. 0.4</font> Web directory</h1>
 EOL;
 $page_middle = <<<EOL
-<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=en:yggdrasil:wyrd_register" class="black u" >Wyrd</a>)</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" class="black u" >ALFIS</a>)</th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
+<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" class="black u" >ALFIS</a>)</th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
 <tbody>
 EOL;
 $page_bottom = <<<EOL
@@ -130,13 +130,11 @@ while ($row = $result_sites->fetchArray()) {
     $URL_pieces = explode(":", $URL);
     $Protocol = $URL_pieces[0];
     $OnlineAt = $row['Available'] == 1 ? '' : "{$row['AvailabilityDate']}";
-    $WDName = "{$row['Wyrd_DName']}";
-    $DName_W_text = $WDName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$WDName/\">$WDName</a></div>";
     $ADName = "{$row['ALFIS_DName']}";
     $DName_A_text = $ADName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$ADName/\">$ADName</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
     $index_html .= <<<EOL
-    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_W_text</td><td class="dname">$DName_A_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
+    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_A_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
 EOL;
 }
 
@@ -183,13 +181,11 @@ while ($row = $result_sites_with_categories->fetchArray()) {
     $URL_pieces = explode(":", $URL);
     $Protocol = $URL_pieces[0];
     $OnlineAt = $row['Available'] == 1 ? '' : "{$row['AvailabilityDate']}";
-    $WDName = "{$row['Wyrd_DName']}";
-    $DName_W_text = $WDName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$WDName/\">$WDName</a></div>";
     $ADName = "{$row['ALFIS_DName']}";
     $DName_A_text = $ADName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$ADName/\">$ADName</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
 
-    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_W_text</td><td class=\"dname\">$DName_A_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
+    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_A_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
 
     $category_ID = "{$row['CategoryID']}";
     $category_name = "{$row['CategoryName']}";
