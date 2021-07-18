@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS "Sites" (
 	"URL"	TEXT NOT NULL,
 	"Description"	TEXT,
 	"ALFIS_DName"	TEXT,
+    "meshname"   TEXT,
 	"Available"	INTEGER NOT NULL,
 	"AvailabilityDate"	TEXT,
 	"NumberOfChecks"	INTEGER,

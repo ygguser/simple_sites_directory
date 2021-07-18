@@ -111,6 +111,21 @@ if ($addr_OK === false) {
 	page_end();
 }
 
+//include dir
+list($scriptPath) = get_included_files();
+$dir = dirname("$scriptPath");
+
+//meshname
+$meshname = '';
+require_once("$dir/../php-backend/base32.php");
+$parsed_url = parse_url($url);
+if ($parsed_url) {
+    $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+    $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+    $url_path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+    $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meshname' . "$port$url_path";
+}
+
 if ($dname == '') {
     $url_p = preg_replace('{/$}', '', $url) . '%';
     $nrows = 0;
@@ -149,10 +164,11 @@ $dt = date("Y-m-d\ H:i:s");
 
 //add site to DB
 try {
-    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, ALFIS_DName, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, :dname, :date, 0, 0);');
+    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, ALFIS_DName, meshname, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, :dname, :meshname, :date, 0, 0);');
     $query->bindValue(':url', $url, PDO::PARAM_STR);
     $query->bindValue(':description', $description, PDO::PARAM_STR);
     $query->bindValue(':dname', $dname, PDO::PARAM_STR);
+    $query->bindValue(':meshname', $meshname, PDO::PARAM_STR);
     $query->bindValue(':date', $dt, PDO::PARAM_STR);
     $query->execute();
     //$query = $db->query('SELECT last_insert_rowid() AS SiteID;');
@@ -207,9 +223,6 @@ $db = null;// close DB connection
 echo "The site was successfully added! After a while, it will appear in the list.<br><a class=\"black\" href=\"/\">Return</a> to the main page.";
 
 //regenerate HTML in background
-list($scriptPath) = get_included_files();
-$dir = dirname("$scriptPath");
-
 exec('php -f \''. realpath("$dir/../php-backend/ygg_generateHTML.php") . '\' >/dev/null 2>&1 &');
 
 // --- telegram notify
