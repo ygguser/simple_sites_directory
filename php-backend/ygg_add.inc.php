@@ -122,8 +122,8 @@ $parsed_url = parse_url($url);
 if ($parsed_url) {
     $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
     $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-    $url_path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-    $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meshname' . "$port$url_path";
+    $url_path = (isset($parsed_url['path']) && $parsed_url['path'] != '/') ? $parsed_url['path'] : '';
+    $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meship' . "$port$url_path";
 }
 
 if ($dname == '') {
