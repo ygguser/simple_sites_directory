@@ -136,7 +136,7 @@ while ($row = $result_sites->fetchArray()) {
     $meshname_text = "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$meshname\">$meshname</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
     $index_html .= <<<EOL
-    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_A_text</td><td>$meshname_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
+    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_A_text</td><td class="dname">$meshname_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
 EOL;
 }
 
@@ -189,7 +189,7 @@ while ($row = $result_sites_with_categories->fetchArray()) {
     $meshname_text = "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$meshname\">$meshname</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
 
-    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_A_text</td><td>$meshname_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
+    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_A_text</td><td class=\"dname\">$meshname_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
 
     $category_ID = "{$row['CategoryID']}";
     $category_name = "{$row['CategoryName']}";
