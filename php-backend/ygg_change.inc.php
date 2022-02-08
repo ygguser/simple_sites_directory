@@ -105,7 +105,8 @@ $addr_OK = false;
 $ip = reset($matches[1]);
 
 if ($ip !== false ) {
-	if ((inet_pton($ip) !== false) && true) {
+    //if ((inet_pton($ip) !== false) && true) {
+    if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) && true) {    
 		$addr_OK = true;
 	}
 }
