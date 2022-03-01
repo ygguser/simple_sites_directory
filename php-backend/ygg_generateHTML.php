@@ -101,12 +101,14 @@ $page_middle = <<<EOL
 <tbody>
 EOL;
 $page_bottom = <<<EOL
-<font size="-2"><br>If someone is interested in how it works, take a look here: <a class="black u" href="https://notabug.org/ygguser/simple_sites_directory" target="_blank">NotABug repo</a>.<br></font><br>
-<a class="black" href="https://matrix.to/#/@0n0n:matrix.org">@0n0n:matrix.org</a>
-<br>&nbsp;</div><!--//page//-->
+<font size="-2"><br><a class="black u" href="https://notabug.org/ygguser/simple_sites_directory" target="_blank">NotABug repo</a>.<br></font><br>
+<!--//contact//-->
+</div><!--//page//-->
 </body>
 </html>
 EOL;
+//Take a look here if you're interested in how it works: 
+//<a class="black" href="https://matrix.to/#/@0n0n:matrix.org">@0n0n:matrix.org</a><br>&nbsp;
 
 # the beginning of the file
 $index_html = $page_top;
