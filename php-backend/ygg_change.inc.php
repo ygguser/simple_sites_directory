@@ -176,27 +176,31 @@ if ($delete) {
     page_end();
 }
 
-$dname = htmlspecialchars(trim(strip_tags(stripslashes($_POST['domain']))));
-$dname = str_replace(array("\n", "\r"), '', $dname);
-$dname = escapeshellcmd($dname);
+$dname = ""; 
+if(isset($_POST['domain'])) {
+    if ($_POST['domain'] != '' && strlen($_POST['domain']) < 3) {
+        echo 'Domain name you have entered is incorrect!';
+        page_end();
+    }   
+    $dname = htmlspecialchars(trim(strip_tags(stripslashes($_POST['domain']))));
+    $dname = str_replace(array("\n", "\r"), '', $dname);
+    $dname = escapeshellcmd($dname);
 
-////check domain resolv
-//if ($dname != '') {
-//    $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @301:2923::53 $dname +short"));
-//    if ($output == '') {
-//        echo "The domain name cannot be resolved, it may not be registered yet. Try specifying it later.";
-//        page_end();
-//    }
-//    else {
-//        if (strpos($url, $output) === false) {
-//            echo "This domain name is associated with a different IP address ($output).";
-//            //echo "URL: $url<br>";
-//            //echo "IP: $output<br>";
-//            //echo "DOMAIN: $dname<br>";
-//            page_end();
-//        }
-//    }
-//}
+    //check domain resolv
+    if ($dname != '') {
+        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @302:db60::53 $dname +short"));
+        if ($output == '') {
+            echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://github.com/Revertron/Alfis" target="_blank">ALFIS</a> domain name. Please correct it or don\'t specify it.';
+            page_end();
+        }   
+        else {
+            if (strpos($_POST['url'], $output) === false) {
+                echo "This domain name is associated with a different IP address ($output). Please correct it.";
+                page_end();
+            }   
+       }   
+    }   
+}
 
 $dt = date("Y-m-d\ H:i:s");
 
