@@ -64,7 +64,7 @@ echo "$rndfname";
         <td>Description:</td><td><input type="text" id="input_description" name="description" maxlength="500" placeholder="A brief description of the site" value=""> <div style="display: inline;" id="descr_necess_mark"><font color="red">*</font></div></td>
     </tr>
     <tr>
-        <td>Domain name (<a class="black" href="http://[300:529f:150c:eafe::6]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" id="input_domain" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
+        <td>Domain name (<a class="black" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" id="input_domain" name="domain" maxlength="500" placeholder="example.ygg" value=""></td>
     </tr>
     <tr>
         <td>Categories (<a class="black" href="javascript:void(0);" onclick='document.getElementById("select_categories").selectedIndex = -1;'>&#10007;</a>):</td>
