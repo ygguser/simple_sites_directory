@@ -202,6 +202,32 @@ if(isset($_POST['domain'])) {
     }   
 }
 
+$EmerDNS = ""; 
+if(isset($_POST['EmerDNS'])) {
+    if ($_POST['EmerDNS'] != '' && strlen($_POST['EmerDNS']) < 3) {
+        echo 'Domain name you have entered is incorrect!';
+        page_end();
+    }   
+    $EmerDNS = htmlspecialchars(trim(strip_tags(stripslashes($_POST['EmerDNS']))));
+    $EmerDNS = str_replace(array("\n", "\r"), '', $EmerDNS);
+    $EmerDNS = escapeshellcmd($EmerDNS);
+
+    //check domain resolv
+    if ($EmerDNS != '') {
+        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @159.89.120.99 $EmerDNS +short"));
+        if ($output == '') {
+            echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://emercoin.com/en/documentation/blockchain-services/emerdns/emerdns-introduction/" target="_blank">EmerDNS</a> domain name. Please correct it or don\'t specify it.';
+            page_end();
+        }
+        else {
+            if (strpos($_POST['url'], $output) === false) {
+                echo "This domain name is associated with a different IP address ($output). Please correct it.";
+                page_end();
+            }
+       }
+    }   
+}
+
 $dt = date("Y-m-d\ H:i:s");
 
 //update record (first determine whether the categories are passed)
@@ -225,9 +251,10 @@ if (isset($_POST['categories'])) {
 // update record
 try {
     $db->beginTransaction();
-    $query = $db->prepare('UPDATE Sites SET ALFIS_DName = :DName, Description = :Description WHERE ID = :SiteID;');
+    $query = $db->prepare('UPDATE Sites SET ALFIS_DName = :DName, EmerDNS = :EmerDNS, Description = :Description WHERE ID = :SiteID;');
     $query->bindParam(':SiteID', $siteID);
     $query->bindParam(':DName', $dname);
+    $query->bindParam(':EmerDNS', $EmerDNS);
     $query->bindParam(':Description', $description);
     $query->execute();
     $query = $db->prepare('DELETE FROM SitesCategories WHERE Site = :SiteID;');

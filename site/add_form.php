@@ -56,6 +56,9 @@ $result->reset();
 <td>Domain name (<a class="black" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:alfis" target="_blank">ALFIS</a>):</td><td><input type="text" name="DomainName" maxlength="500" placeholder="Domain name (for example: sites.ygg)" value=""></td>
 </tr>
 <tr>
+<td>Domain name (<a class="black" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:emerdns" target="_blank">EmerDNS</a>):</td><td><input type="text" name="EmerDNS" maxlength="500" placeholder="Domain name (for example: sites.y.lib)" value=""></td>
+</tr>
+<tr>
 <td>Categories (<a class="black" href="javascript:void(0);" onclick='document.getElementById("select_categories").selectedIndex = -1;'>&#10007;</a>):</td>
 <?php
 echo "<td><select id=\"select_categories\" multiple name=\"categories[]\" size=\"" . $nrows . "\">";

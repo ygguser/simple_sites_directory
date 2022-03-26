@@ -83,6 +83,32 @@ if(isset($_POST['DomainName'])) {
     }
 }
 
+$EmerDNS = ""; 
+if(isset($_POST['EmerDNS'])) {
+    if ($_POST['EmerDNS'] != '' && strlen($_POST['EmerDNS']) < 3) {
+        echo 'Domain name you have entered is incorrect!';
+        page_end();
+    }   
+    $EmerDNS = htmlspecialchars(trim(strip_tags(stripslashes($_POST['EmerDNS']))));
+    $EmerDNS = str_replace(array("\n", "\r"), '', $EmerDNS);
+    $EmerDNS = escapeshellcmd($EmerDNS);
+
+    //check domain resolv
+    if ($EmerDNS != '') {
+        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @159.89.120.99 $EmerDNS +short"));
+        if ($output == '') {
+            echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://emercoin.com/en/documentation/blockchain-services/emerdns/emerdns-introduction/" target="_blank">EmerDNS</a> domain name. Please correct it or don\'t specify it.';
+            page_end();
+        }
+        else {
+            if (strpos($_POST['url'], $output) === false) {
+                echo "This domain name is associated with a different IP address ($output). Please correct it.";
+                page_end();
+            }
+       }
+    }   
+}
+
 $url = htmlspecialchars(trim(strip_tags(stripslashes($_POST['url']))));
 $url = str_replace(array("\n", "\r"), '', $url);
 if (substr($url, -1) == ']') {
@@ -127,7 +153,7 @@ if ($parsed_url) {
     $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meship' . "$port$url_path";
 }
 
-if ($dname == '') {
+if ($dname == '' && $EmerDNS == '') {
     $url_p = preg_replace('{/$}', '', $url) . '%';
     $nrows = 0;
     try {
@@ -144,10 +170,25 @@ if ($dname == '') {
         echo 'The site is already contained in the catalog!';
         page_end();
     }
-} else { // $dname != ''
+} elseif ($dname != '') { // $dname != ''
     try {
         $query = $db->prepare('SELECT ID FROM Sites WHERE ALFIS_DName = :dname LIMIT 1;');
         $query->bindParam(':dname', $dname);
+        $query->execute();
+        $nrows = count($query->fetchAll());
+    } catch (PDOException $e) {
+        echo 'Something went wrong. Please contact the site administrator.';
+        echo '<br>' . $e->getMessage() . '<br>';
+        page_end();
+    }
+    if ($nrows > 0) {
+        echo 'The site is already contained in the catalog!';
+        page_end();
+    }
+} elseif ($EmerDNS != '') { // $EmerDNS != ''
+    try {
+        $query = $db->prepare('SELECT ID FROM Sites WHERE EmerDNS = :emerdns LIMIT 1;');
+        $query->bindParam(':emerdns', $EmerDNS);
         $query->execute();
         $nrows = count($query->fetchAll());
     } catch (PDOException $e) {
@@ -165,10 +206,11 @@ $dt = date("Y-m-d\ H:i:s");
 
 //add site to DB
 try {
-    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, ALFIS_DName, meshname, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, :dname, :meshname, :date, 0, 0);');
+    $query = $db->prepare('INSERT INTO Sites (URL, Description, Available, ALFIS_DName, EmerDNS, meshname, AvailabilityDate, NumberOfChecks, NumberOfUnavailability) VALUES (:url, :description, 1, :dname, :EmerDNS, :meshname, :date, 0, 0);');
     $query->bindValue(':url', $url, PDO::PARAM_STR);
     $query->bindValue(':description', $description, PDO::PARAM_STR);
     $query->bindValue(':dname', $dname, PDO::PARAM_STR);
+    $query->bindValue(':EmerDNS', $EmerDNS, PDO::PARAM_STR);
     $query->bindValue(':meshname', $meshname, PDO::PARAM_STR);
     $query->bindValue(':date', $dt, PDO::PARAM_STR);
     $query->execute();

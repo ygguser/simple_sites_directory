@@ -97,7 +97,7 @@ $(document).bind("mobileinit", function () {
 <div class="page"><h1>Yggdrasil <font color="green">v. 0.4</font> Web directory</h1>
 EOL;
 $page_middle = <<<EOL
-<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:alfis" class="black u">ALFIS</a>)</th><th data-priority="1"><a target="_blank" href="https://github.com/zhoreeq/meshname" class="black u">meshname</a></th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
+<thead><tr><th data-priority="critical">Address</th><th data-priority="critical">Description</th><th data-priority="critical">Domain name (<a target="_blank" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:alfis" class="black u">ALFIS</a>)</th><th data-priority="1">Domain name (<a target="_blank" href="http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/doku.php?id=yggdrasil:dns:emerdns" class="black u">EmerDNS</a>)</th><th data-priority="1"><a target="_blank" href="https://github.com/zhoreeq/meshname" class="black u">meshname</a></th><th data-priority="1">Was online</th><th data-priority="1">Uptime</th></tr></thead>
 <tbody>
 EOL;
 $page_bottom = <<<EOL
@@ -134,11 +134,13 @@ while ($row = $result_sites->fetchArray()) {
     $OnlineAt = $row['Available'] == 1 ? '' : "{$row['AvailabilityDate']}";
     $ADName = "{$row['ALFIS_DName']}";
     $DName_A_text = $ADName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$ADName/\">$ADName</a></div>";
+    $EmerDNS = "{$row['EmerDNS']}";
+    $EmerDNS_A_text = $EmerDNS == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$EmerDNS/\">$EmerDNS</a></div>";
     $meshname = "{$row['meshname']}";
     $meshname_text = "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$meshname\">$meshname</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
     $index_html .= <<<EOL
-    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_A_text</td><td class="dname">$meshname_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
+    <tr><td class="addr"><div class="$ClassAvUnav"><a class="black" target="_blank" href="$URL">$URL</a></div></td><td class="descr"><div class="$ClassAvUnav">{$row['Description']}</div></td><td class="dname">$DName_A_text</td><td class="dname">$EmerDNS_A_text</td><td class="dname">$meshname_text</td><td class="OnlineAt">$OnlineAt</td><td class="uptime">$Uptime</td></tr>
 EOL;
 }
 
@@ -187,11 +189,13 @@ while ($row = $result_sites_with_categories->fetchArray()) {
     $OnlineAt = $row['Available'] == 1 ? '' : "{$row['AvailabilityDate']}";
     $ADName = "{$row['ALFIS_DName']}";
     $DName_A_text = $ADName == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$ADName/\">$ADName</a></div>";
+    $EmerDNS = "{$row['EmerDNS']}";
+    $EmerDNS_A_text = $EmerDNS == '' ? '' : "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$EmerDNS/\">$EmerDNS</a></div>";
     $meshname = "{$row['meshname']}";
     $meshname_text = "<div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$Protocol://$meshname\">$meshname</a></div>";
     $Uptime = number_format($row['Uptime'], 2, '.', '');
 
-    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_A_text</td><td class=\"dname\">$meshname_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
+    $entire_table_row = "<tr><td class=\"addr\"><div class=\"$ClassAvUnav\"><a class=\"black\" target=\"_blank\" href=\"$URL\">$URL</a></div></td><td class=\"descr\"><div class=\"$ClassAvUnav\">{$row['Description']}</div></td><td class=\"dname\">$DName_A_text</td><td class=\"dname\">$EmerDNS_A_text</td><td class=\"dname\">$meshname_text</td><td class=\"OnlineAt\">$OnlineAt</td><td class=\"uptime\">$Uptime</td></tr>";
 
     $category_ID = "{$row['CategoryID']}";
     $category_name = "{$row['CategoryName']}";
