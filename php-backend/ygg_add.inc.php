@@ -95,7 +95,7 @@ if(isset($_POST['EmerDNS'])) {
 
     //check domain resolv
     if ($EmerDNS != '') {
-        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @159.89.120.99 $EmerDNS +short"));
+        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @seed1.emercoin.com $EmerDNS +short"));
         if ($output == '') {
             echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://emercoin.com/en/documentation/blockchain-services/emerdns/emerdns-introduction/" target="_blank">EmerDNS</a> domain name. Please correct it or don\'t specify it.';
             page_end();
