@@ -7,17 +7,17 @@ function page_end() {
     exit(0);
 }
 
-function CheckCaptcha($code) {
-    if(isset($code)) {
-        if(($code != $_SESSION['code']) || (strlen($code) < 5)) {
-            return false;
-        }
-        unset($_SESSION['code']);
-        return true;
-    } else {
-        return false;
-    }
-}
+//function CheckCaptcha($code) {
+//    if(isset($code)) {
+//        if(($code != $_SESSION['code']) || (strlen($code) < 5)) {
+//            return false;
+//        }
+//        unset($_SESSION['code']);
+//        return true;
+//    } else {
+//        return false;
+//    }
+//}
 
 function regen_and_notify($url, $description, $site_deletion = false) {
     //regenerate HTML in background
@@ -84,10 +84,10 @@ if(isset($_POST['submit'])) {
 		page_end();
 	}
 
-    if (CheckCaptcha($_POST['code']) === false) {
-        echo 'Please verify that you typed in correct verification code.';
-        page_end();
-    }
+    //if (CheckCaptcha($_POST['code']) === false) {
+    //    echo 'Please verify that you typed in correct verification code.';
+    //    page_end();
+    //}
 
     if($_SESSION['rndfname'] == '') {
         echo 'Incorrect form data.';

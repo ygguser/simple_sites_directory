@@ -79,9 +79,9 @@ echo "$rndfname";
         ?>
         </select></td>
     </tr>
-    <tr>
+    <!--<tr>
         <td><a href="javascript:void(0);" onclick="document.getElementById('captcha').src='captcha.php?r=' + Math.random();"><img src="captcha.php" id="captcha"></a></td><td><input type="text" name="code" maxlength="5" placeholder="verification code" value=""> <font color="red">*</font></td>
-    </tr>
+    </tr> //-->
     <tr><td></td><td><input type="submit" name="submit" value="Change data"></td></tr>
 </table>
 </form>
