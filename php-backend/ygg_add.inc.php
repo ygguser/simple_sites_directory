@@ -7,6 +7,18 @@ function page_end() {
     exit(0);
 }
 
+function CheckCaptcha($code) {
+    if(isset($code)) {
+        if(($code != $_SESSION['code']) || (strlen($code) < 5)) {
+            return false;
+        }
+        unset($_SESSION['code']);
+        return true;
+    } else {
+        return false;
+    }
+}
+
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
 echo '<html>';
 echo '<head><title>Adding a site to the directory.</title>';
@@ -48,10 +60,11 @@ if(isset($_POST['submit'])) {
 		page_end();
 	}
 
-	if($_POST['code'] != $_SESSION['code']) {
-		echo 'Please verify that you typed in correct verification code.';
-		page_end();
-	}
+    if (CheckCaptcha($_POST['code']) === false) {
+        echo 'Please verify that you typed in correct verification code.';
+        page_end();
+    }
+
 } else {	
 	echo 'Please fill in all fields of the form correctly.';
 	page_end();
