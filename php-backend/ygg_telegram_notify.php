@@ -8,7 +8,7 @@ function tlgNotify($msg, $url, $description) {
     // --- 
 
     if ($chat_id == '-1')
-        exit(0);
+        return;
 
     $curlInit = curl_init();
     curl_setopt($curlInit, CURLOPT_URL, "$bot_url");
