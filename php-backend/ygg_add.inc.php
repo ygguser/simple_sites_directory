@@ -291,6 +291,16 @@ if(file_exists("$scriptName")) {
 }
 // --- telegram notify
 
+// --- matrix notify
+$scriptName = "$dir/../php-backend/ygg_matrix_notify.php";
+if(file_exists("$scriptName")) {
+    require_once("$scriptName");
+    if (function_exists('mtrxNotify')) {
+        mtrxNotify('A new site has been added:', $url, $description);
+    }
+}
+// --- matrix notify
+
 page_end();
 
 ?>
