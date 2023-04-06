@@ -151,6 +151,11 @@ if ($addr_OK === false) {
 	page_end();
 }
 
+if (@get_headers($url) === FALSE) {
+    echo 'It looks like the site you entered is not available. Make sure it works and try adding it later.';
+    page_end();
+}
+
 //include dir
 list($scriptPath) = get_included_files();
 $dir = dirname("$scriptPath");
