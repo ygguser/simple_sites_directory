@@ -129,7 +129,7 @@ $ip = reset($matches[1]);
 
 if ($ip !== false ) {
     //if ((inet_pton($ip) !== false) && true) {
-    if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) && true) {    
+    if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) && preg_match('/^0{0,1}[2-3][a-f0-9]{0,2}:/', $ip)) {    
 		$addr_OK = true;
 	}
 }
