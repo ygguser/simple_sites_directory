@@ -5,7 +5,7 @@ function checkURL() { #$1 - URL, $2 - method (1 - HEAD else - GET)
     then
         if ! curl --connect-timeout 20 --max-time 120 --silent --head --location --insecure --include "$1" 2>&1 | grep -m 1 -q "200\ \|203\ \|206\ \|501\ \|301\ "
         then
-            echo "$1" 
+            echo "$1"
         fi
     else
         if ! curl --connect-timeout 20 --max-time 120 --silent --location --insecure --include --header 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0' "$1" 2>&1 | grep -m 1 -q "200\ \|203\ \|206\ \|501\ \|301\ "
@@ -66,4 +66,8 @@ echo 'Checking availability done.'
 
 echo 'Generating HTML-pages...'
 php -f "$DIR/php-backend/ygg_generateHTML.php"
+echo 'Done.'
+
+echo 'Generating RSS-feeds...'
+php -f "$DIR/php-backend/ygg_generateRSS.php"
 echo 'Done.'
