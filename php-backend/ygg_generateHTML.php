@@ -118,8 +118,12 @@ $objDateTime = new DateTime('NOW');
 $time_updated = $objDateTime->format('Y-m-d H:i:sP');
 
 $index_html .= <<<EOL
-updated: $time_updated; number of rows: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in this list, you can <a class="black u" href="/add_form.php">add it manually</a>.<br><font size="-1">You can also <a class="black u" href="/change_form.php">change</a> the description and categories of existing entries in the list.</font><br><br><center><b>Simple list │ <a class="black u" href="categories.html">Categories</a> | <a class="black u" target="_blank" href="rss/all.xml"><u>RSS</u></a></b></center>
+updated: $time_updated; number of rows: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in this list, you can <a class="black u" href="/add_form.php">add it manually</a>.<br><font size="-1">You can also <a class="black u" href="/change_form.php">change</a> the description and categories of existing entries in the list.</font><br><br><center><b>Simple list │ <a class="black u" href="categories.html">Categories</a></b></center>
 EOL;
+
+// rss begin (php-backend/ygg_generateRSS.php)
+$index_html .= "<a class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" target=\"_blank\" href=\"rss/all.xml\">RSS</a>";
+// rss end
 
 // table header
 $index_html .= '<table data-role="table" data-mode="columntoggle" clsass="ui-responsive" id="maintable" cellspacing="0">';
