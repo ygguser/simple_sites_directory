@@ -176,7 +176,7 @@ catch (Exception $exception)
 
 echo _('Generating common RSS...') . PHP_EOL;
 
-if ($querySites = $db->query('SELECT * FROM `Sites`'))
+if ($querySites = $db->query('SELECT * FROM `Sites` ORDER BY `ID` DESC LIMIT ' . (int) RSS_LIMIT))
 {
     $sites = [];
     while ($site = $querySites->fetchArray(SQLITE3_ASSOC))
@@ -207,7 +207,8 @@ if ($queryCategories = $db->query('SELECT * FROM `Categories`'))
                                                JOIN  `SitesCategories` ON (
                                                         `SitesCategories`.`Site` = `Sites`.`ID` AND
                                                         `SitesCategories`.`Category` = ' . (int) $category['ID'] . '
-                                               )'))
+                                               )
+                                               ORDER BY `Sites`.`ID` DESC LIMIT ' . (int) RSS_LIMIT))
         {
             $sites = [];
             while ($site = $querySites->fetchArray(SQLITE3_ASSOC))

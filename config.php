@@ -9,3 +9,8 @@ define(
   'WEBSITE_NAME',
   _('Web-sites directory')
 );
+
+define(
+  'RSS_LIMIT',
+  20
+);
