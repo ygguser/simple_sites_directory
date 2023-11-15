@@ -142,7 +142,7 @@ $ip = reset($matches[1]);
 //echo var_dump($matches);
 if ($ip !== false ) {
     //if ((inet_pton($ip) !== false) && true) {
-    if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) && preg_match('/^0{0,1}[2-3][a-f0-9]{0,2}:/', $ip)) {
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE && preg_match('/^0{0,1}[2-3][a-f0-9]{0,2}:/', $ip)) {
 		$addr_OK = true;
 	}
 }
@@ -152,8 +152,8 @@ if ($addr_OK === false) {
 }
 
 if (@get_headers($url) === FALSE) {
-    echo 'It looks like the site you entered is not available. Make sure it works and try adding it later.';
-    page_end();
+        echo 'It looks like the site you entered is not available. Make sure it works and try adding it later.';
+        page_end();
 }
 
 //include dir
@@ -302,7 +302,7 @@ if(file_exists("$scriptName")) {
     require_once("$scriptName");
     if (function_exists('mtrxNotify')) {
         mtrxNotify('A new site has been added:', $url, $description);
-    }
+    }   
 }
 // --- matrix notify
 

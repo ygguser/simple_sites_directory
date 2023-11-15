@@ -45,8 +45,9 @@ function regen_and_notify($url, $description, $site_deletion = false) {
             $msg = 'Site data has been changed' . ($site_deletion === false ? '' : ' (deletion)') . ':';
             mtrxNotify($msg, $url, $description);
         }
-    }
-// --- matrix notify
+    }   
+    // --- matrix notify
+
 }
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
