@@ -178,7 +178,7 @@ $categories_html = $page_top;
 
 // date and number of rows
 $categories_html .= <<<EOL
-updated: $time_updated number of sites: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in these lists, you can <a class="black" href="/add_form.php"><u>add it manually</u></a>.<br><font size="-1">You can also <a class="black" href="/change_form.php"><u>change</u></a> the description and categories of existing entries in the list.</font><br><br><b><a class="black" href="/"><u>Simple list</u></a> │ Categories | <a class="black u" target="_blank" href="rss/all.xml"><u>RSS</u></a></b><br><br>
+updated: $time_updated number of sites: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in these lists, you can <a class="black" href="/add_form.php"><u>add it manually</u></a>.<br><font size="-1">You can also <a class="black" href="/change_form.php"><u>change</u></a> the description and categories of existing entries in the list.</font><br><br><b><a class="black" href="/"><u>Simple list</u></a> │ Categories <!--| <a class="black u" target="_blank" href="rss/all.xml"><u>RSS</u></a>//--></b><br><br>
 EOL;
 
 $categories_html .= '<div style="line-height: 130%;">';
