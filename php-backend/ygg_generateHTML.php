@@ -210,9 +210,10 @@ while ($row = $result_sites_with_categories->fetchArray()) {
         //button
         $categories_html .= '<div data-role="collapsible" data-content-theme="false" data-mini="true" data-collapsed-icon="" data-expanded-icon="">';
         $categories_html .= "<h3>$category_name ({$row['SitesCountInCategory']})</h3>";
+        $categories_html .= '<ul data-role="listview">';
 
         // rss begin (php-backend/ygg_generateRSS.php)
-        $categories_html .= "<a target=\"_blank\" class=\"black\" href=\"";
+        $categories_html .= "<a target=\"_blank\" class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" href=\"";
         $categories_html .= "rss/" . strtolower(
             trim(
                 preg_replace(
@@ -223,10 +224,8 @@ while ($row = $result_sites_with_categories->fetchArray()) {
                 "-"
             ) . ".xml"
         );
-        $categories_html .= "\"><u>RSS</u></a>";
+        $categories_html .= "\">RSS</a>";
         // rss end
-
-        $categories_html .= '<ul data-role="listview">';
 
         //table header
         $categories_html .= <<<EOL
