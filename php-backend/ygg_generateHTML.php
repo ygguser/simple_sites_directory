@@ -15,7 +15,7 @@ if (!is_dir($tmpdir)) {
     }
     umask($oldmask);
 } else {
-    if (file_exists("$tmpdir/index.html")) 
+    if (file_exists("$tmpdir/index.html"))
         die('Another process is running. Exit.');
 }
 
@@ -46,8 +46,8 @@ PRAGMA temp_store=2;
 
 CREATE TEMPORARY TABLE tmp_SitesWithCategories AS
 SELECT Sites.*, round(CASE WHEN Sites.NumberOfUnavailability = 0 THEN 100.0 ELSE CAST(Sites.NumberOfChecks - Sites.NumberOfUnavailability AS REAL) / CAST(Sites.NumberOfChecks AS REAL) * CAST(100 AS REAL) END, 2) AS Uptime, SitesCategories.Category AS CategoryID, Categories.Name AS CategoryName, Categories.Sorting AS CategorySorting
-FROM Sites 
-LEFT JOIN SitesCategories ON Sites.ID = SitesCategories.Site 
+FROM Sites
+LEFT JOIN SitesCategories ON Sites.ID = SitesCategories.Site
 LEFT JOIN Categories ON SitesCategories.Category = Categories.ID;
 
 CREATE TEMPORARY TABLE tmp_SitesCountInCategory AS
@@ -107,7 +107,7 @@ $page_bottom = <<<EOL
 </body>
 </html>
 EOL;
-//Take a look here if you're interested in how it works: 
+//Take a look here if you're interested in how it works:
 //<a class="black" href="https://matrix.to/#/@0n0n:matrix.org">@0n0n:matrix.org</a><br>&nbsp;
 
 # the beginning of the file
@@ -118,7 +118,7 @@ $objDateTime = new DateTime('NOW');
 $time_updated = $objDateTime->format('Y-m-d H:i:sP');
 
 $index_html .= <<<EOL
-updated: $time_updated; number of rows: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in this list, you can <a class="black u" href="/add_form.php">add it manually</a>.<br><font size="-1">You can also <a class="black u" href="/change_form.php">change</a> the description and categories of existing entries in the list.</font><br><br><center><b>Simple list │ <a class="black u" href="categories.html">Categories</a></b></center>
+updated: $time_updated; number of rows: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in this list, you can <a class="black u" href="/add_form.php">add it manually</a>.<br><font size="-1">You can also <a class="black u" href="/change_form.php">change</a> the description and categories of existing entries in the list.</font><br><br><center><b>Simple list │ <a class="black u" href="categories.html">Categories</a> | <a class="black u" target="_blank" href="rss/all.xml"><u>RSS</u></a></b></center>
 EOL;
 
 // table header
@@ -151,7 +151,7 @@ $index_html .= '</tbody></table>';
 $index_html .= $page_bottom;
 
 // save index.html
-if (file_exists("$tmpdir/index.html")) 
+if (file_exists("$tmpdir/index.html"))
     die('Another process is running. Exit.');
 
 $index_html = str_replace(array("\n", "\r"), '', $index_html);
@@ -174,7 +174,7 @@ $categories_html = $page_top;
 
 // date and number of rows
 $categories_html .= <<<EOL
-updated: $time_updated number of sites: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in these lists, you can <a class="black" href="/add_form.php"><u>add it manually</u></a>.<br><font size="-1">You can also <a class="black" href="/change_form.php"><u>change</u></a> the description and categories of existing entries in the list.</font><br><br><b><a class="black" href="/"><u>Simple list</u></a> │ Categories</b><br><br>
+updated: $time_updated number of sites: <b>$nrows</b><br><font size="-1">(strikethrough lines are sites inaccessible at the time of the last availability check; sites unavailable for more than a month will be deleted)</font><br><br>If your site is not in these lists, you can <a class="black" href="/add_form.php"><u>add it manually</u></a>.<br><font size="-1">You can also <a class="black" href="/change_form.php"><u>change</u></a> the description and categories of existing entries in the list.</font><br><br><b><a class="black" href="/"><u>Simple list</u></a> │ Categories | <a class="black u" target="_blank" href="rss/all.xml"><u>RSS</u></a></b><br><br>
 EOL;
 
 $categories_html .= '<div style="line-height: 130%;">';
@@ -206,15 +206,30 @@ while ($row = $result_sites_with_categories->fetchArray()) {
             //the end of prev table
             $categories_html .= '</tbody></table></ul></div>';
         }
-    
-        //button    
+
+        //button
         $categories_html .= '<div data-role="collapsible" data-content-theme="false" data-mini="true" data-collapsed-icon="" data-expanded-icon="">';
         $categories_html .= "<h3>$category_name ({$row['SitesCountInCategory']})</h3>";
         $categories_html .= '<ul data-role="listview">';
 
+        // rss begin (php-backend/ygg_generateRSS.php)
+        $categories_html .= "<a target=\"_blank\" class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" href=\"";
+        $categories_html .= "rss/" . strtolower(
+            trim(
+                preg_replace(
+                    "/\W/ui",
+                    "-",
+                    $category_name
+                ),
+                "-"
+            ) . ".xml"
+        );
+        $categories_html .= "\">RSS</a>";
+        // rss end
+
         //table header
         $categories_html .= <<<EOL
-        <table data-role="table" data-mode="columntoggle" clsass="ui-responsive" id="table$category_ID" cellspacing="0"> 
+        <table data-role="table" data-mode="columntoggle" clsass="ui-responsive" id="table$category_ID" cellspacing="0">
 EOL;
         $categories_html .= $page_middle;
 
@@ -230,7 +245,7 @@ EOL;
 //the end of the last table
 $categories_html .= '</tbody></table></ul></div>';
 $categories_html .= '</div>';// line-height
-$categories_html .=  $page_bottom; 
+$categories_html .=  $page_bottom;
 
 $db->close();
 
@@ -249,21 +264,21 @@ unset($categories_html);
 
 echo "Making archives...\n";
 $cmd = <<<EOL
-find "$tmpdir/" -type f -name "*.html" -exec gzip --force --keep {} \; >/dev/null 2>&1 
+find "$tmpdir/" -type f -name "*.html" -exec gzip --force --keep {} \; >/dev/null 2>&1
 EOL;
 
-exec("$cmd"); 
+exec("$cmd");
 //////////////////////////////////////////////////// copy HTML-pages
 
 $cmd = <<<EOL
-find "$tmpdir/" -maxdepth 1 -type f \( -name '*.html' -o -name '*.gz' \) -exec cp {} "$web_root" \; >/dev/null 2>&1 
+find "$tmpdir/" -maxdepth 1 -type f \( -name '*.html' -o -name '*.gz' \) -exec cp {} "$web_root" \; >/dev/null 2>&1
 EOL;
 
 exec("$cmd");
 //////////////////////////////////////////////////// remove tmp-files
- 
+
 $cmd = <<<EOL
-find "$tmpdir/" -maxdepth 1 -type f \( -name '*.html' -o -name '*.gz' \) -exec rm -f {} \; >/dev/null 2>&1 
+find "$tmpdir/" -maxdepth 1 -type f \( -name '*.html' -o -name '*.gz' \) -exec rm -f {} \; >/dev/null 2>&1
 EOL;
 
 exec("$cmd");
