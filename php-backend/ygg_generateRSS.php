@@ -135,7 +135,7 @@ function generateRSS(
         true
     );
 
-    return file_put_contents(
+    return (bool) file_put_contents(
         sprintf(
             __DIR__ . '/../site/rss/%s.xml',
             strtolower(
