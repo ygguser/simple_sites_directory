@@ -122,7 +122,7 @@ updated: $time_updated; number of rows: <b>$nrows</b><br><font size="-1">(strike
 EOL;
 
 // rss begin (php-backend/ygg_generateRSS.php)
-$index_html .= "<a class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" target=\"_blank\" href=\"rss/all.xml\">RSS</a>";
+$index_html .= '<a class="ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini" target="_blank" href="rss/all.xml">RSS</a>';
 // rss end
 
 // table header
