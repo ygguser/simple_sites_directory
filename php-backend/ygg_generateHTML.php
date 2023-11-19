@@ -101,7 +101,7 @@ $page_middle = <<<EOL
 <tbody>
 EOL;
 $page_bottom = <<<EOL
-<font size="-2"><br><a class="black u" href="https://notabug.org/ygguser/simple_sites_directory" target="_blank">NotABug repo</a>.<br></font><br>
+<font size="-2"><br><a class="black u" href="https://github.com/ygguser/simple_sites_directory" target="_blank">GitHub repo</a>.<br></font><br>
 <!--//contact//-->
 </div><!--//page//-->
 </body>
