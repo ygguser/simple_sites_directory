@@ -87,13 +87,18 @@ if(isset($_POST['DomainName'])) {
     //check domain resolv
     if (!empty($dname)) {
 
-        if ($address = Helper::dig($dname, DNS_YGG))
+        if ($addresses = Helper::dig($dname, DNS_YGG))
         {
-            if (strpos($_POST['url'], $address) === false)
+            $addresses = implode(
+                ',',
+                $addresses
+            );
+
+            if (strpos($_POST['url'], $addresses) === false)
             {
                 echo sprintf(
-                    'This domain name is associated with a different IP address (%s). Please correct it.',
-                    $address
+                    'This domain name is associated with a different IP addresses (%s). Please correct it.',
+                    $addresses
                 );
 
                 page_end();
@@ -121,13 +126,18 @@ if(isset($_POST['EmerDNS'])) {
     //check domain resolv
     if (!empty($EmerDNS)) {
 
-        if ($address = Helper::dig($EmerDNS, DNS_EMERCOIN))
+        if ($addresses = Helper::dig($EmerDNS, DNS_EMERCOIN))
         {
-            if (strpos($_POST['url'], $address) === false)
+            $addresses = implode(
+                ',',
+                $addresses
+            );
+
+            if (strpos($_POST['url'], $addresses) === false)
             {
                 echo sprintf(
-                    'This domain name is associated with a different IP address (%s). Please correct it.',
-                    $address
+                    'This domain name is associated with a different IP addresses (%s). Please correct it.',
+                    $addresses
                 );
 
                 page_end();
