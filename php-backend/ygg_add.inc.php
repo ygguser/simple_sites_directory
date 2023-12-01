@@ -2,6 +2,10 @@
 
 defined('yggEXEC') or die('Direct access to this file is prohibited.');
 
+// Load dependencies
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/helper.php';
+
 function page_end() {
     echo '</body></html>';
     exit(0);
@@ -45,16 +49,16 @@ if (!file_exists("$db_file")) {
 try {
     $db = new PDO("sqlite:$db_file");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) { 
+} catch (PDOException $e) {
     echo 'Can\'t open database!<br>';
     echo $e->getMessage();
     page_end();
 }
 
 session_start();
- 
+
 if(isset($_POST['submit'])) {
-	
+
 	if ((strlen($_POST['url']) > 500) || (strlen($_POST['url']) < 12) || (strlen($_POST['description']) < 3)) {
 		echo 'Please fill in all fields of the form correctly.';
 		page_end();
@@ -65,10 +69,20 @@ if(isset($_POST['submit'])) {
         page_end();
     }
 
-} else {	
+} else {
 	echo 'Please fill in all fields of the form correctly.';
 	page_end();
 }
+
+// Parse address
+$address = trim(
+    (string)
+    parse_url(
+        $_POST['url'],
+        PHP_URL_HOST
+    ),
+    '[]'
+);
 
 $dname = "";
 if(isset($_POST['DomainName'])) {
@@ -81,51 +95,73 @@ if(isset($_POST['DomainName'])) {
     $dname = escapeshellcmd($dname);
 
     //check domain resolv
-    if ($dname != '') {
-        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @302:db60::53 $dname +short"));
-        if ($output == '') {
-            echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://github.com/Revertron/Alfis" target="_blank">ALFIS</a> domain name. Please correct it or don\'t specify it.';
-            page_end();
-        }   
-        else {
-            if (strpos($_POST['url'], $output) === false) {
-                echo "This domain name is associated with a different IP address ($output). Please correct it.";
+    if (!empty($dname)) {
+
+        if ($addresses = Helper::dig($dname, DNS_YGG, DNS_DIG_TIME))
+        {
+            if (!in_array($address, $addresses))
+            {
+                echo sprintf(
+                    'This domain name is associated with a different IP addresses (%s). Please correct it.',
+                    implode(
+                        ',',
+                        $addresses
+                    )
+                );
+
                 page_end();
             }
-       }   
+        }
+
+        else
+        {
+            echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://github.com/Revertron/Alfis" target="_blank">ALFIS</a> domain name. Please correct it or don\'t specify it.';
+            page_end();
+        }
     }
 }
 
-$EmerDNS = ""; 
+$EmerDNS = "";
 if(isset($_POST['EmerDNS'])) {
     if ($_POST['EmerDNS'] != '' && strlen($_POST['EmerDNS']) < 3) {
         echo 'Domain name you have entered is incorrect!';
         page_end();
-    }   
+    }
     $EmerDNS = htmlspecialchars(trim(strip_tags(stripslashes($_POST['EmerDNS']))));
     $EmerDNS = str_replace(array("\n", "\r"), '', $EmerDNS);
     $EmerDNS = escapeshellcmd($EmerDNS);
 
     //check domain resolv
-    if ($EmerDNS != '') {
-        $output = preg_replace('/\n$/', '', shell_exec("dig AAAA @seed1.emercoin.com $EmerDNS +short"));
-        if ($output == '') {
+    if (!empty($EmerDNS)) {
+
+        if ($addresses = Helper::dig($EmerDNS, DNS_EMERCOIN, DNS_DIG_TIME))
+        {
+            if (!in_array($address, $addresses))
+            {
+                echo sprintf(
+                    'This domain name is associated with a different IP addresses (%s). Please correct it.',
+                    implode(
+                        ',',
+                        $addresses
+                    )
+                );
+
+                page_end();
+            }
+        }
+
+        else
+        {
             echo 'The domain name cannot be resolved, it may not be registered yet or it is not an <a href="https://emercoin.com/en/documentation/blockchain-services/emerdns/emerdns-introduction/" target="_blank">EmerDNS</a> domain name. Please correct it or don\'t specify it.';
             page_end();
         }
-        else {
-            if (strpos($_POST['url'], $output) === false) {
-                echo "This domain name is associated with a different IP address ($output). Please correct it.";
-                page_end();
-            }
-       }
-    }   
+    }
 }
 
 $url = htmlspecialchars(trim(strip_tags(stripslashes($_POST['url']))));
 $url = str_replace(array("\n", "\r"), '', $url);
 if (substr($url, -1) == ']') {
-    $url = $url . '/'; 
+    $url = $url . '/';
 }
 $description = htmlspecialchars(trim(strip_tags(stripslashes($_POST['description']))));
 $description = str_replace(array("\n", "\r"), '', $description);
@@ -302,7 +338,7 @@ if(file_exists("$scriptName")) {
     require_once("$scriptName");
     if (function_exists('mtrxNotify')) {
         mtrxNotify('A new site has been added:', $url, $description);
-    }   
+    }
 }
 // --- matrix notify
 
