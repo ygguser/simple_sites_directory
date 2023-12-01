@@ -204,6 +204,16 @@ if ($delete) {
     page_end();
 }
 
+// Parse address
+$address = trim(
+    (string)
+    parse_url(
+        $_POST['url'],
+        PHP_URL_HOST
+    ),
+    '[]'
+);
+
 $dname = "";
 if(isset($_POST['domain'])) {
     if ($_POST['domain'] != '' && strlen($_POST['domain']) < 3) {
@@ -219,16 +229,14 @@ if(isset($_POST['domain'])) {
 
         if ($addresses = Helper::dig($dname, DNS_YGG, DNS_DIG_TIME))
         {
-            $addresses = implode(
-                ',',
-                $addresses
-            );
-
-            if (strpos($_POST['url'], $addresses) === false)
+            if (!in_array($address, $addresses))
             {
                 echo sprintf(
                     'This domain name is associated with a different IP addresses (%s). Please correct it.',
-                    $addresses
+                    implode(
+                        ',',
+                        $addresses
+                    )
                 );
 
                 page_end();
@@ -258,16 +266,14 @@ if(isset($_POST['EmerDNS'])) {
 
         if ($addresses = Helper::dig($EmerDNS, DNS_EMERCOIN, DNS_DIG_TIME))
         {
-            $addresses = implode(
-                ',',
-                $addresses
-            );
-
-            if (strpos($_POST['url'], $addresses) === false)
+            if (!in_array($address, $addresses))
             {
                 echo sprintf(
                     'This domain name is associated with a different IP addresses (%s). Please correct it.',
-                    $addresses
+                    implode(
+                        ',',
+                        $addresses
+                    )
                 );
 
                 page_end();
