@@ -16,6 +16,11 @@ define(
 );
 
 define(
+    'DNS_DIG_TIME',
+    2
+);
+
+define(
     'DNS_YGG',
     [
         // '302:db60::53', no response

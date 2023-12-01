@@ -217,7 +217,7 @@ if(isset($_POST['domain'])) {
     //check domain resolv
     if (!empty($dname)) {
 
-        if ($addresses = Helper::dig($dname, DNS_YGG))
+        if ($addresses = Helper::dig($dname, DNS_YGG, DNS_DIG_TIME))
         {
             $addresses = implode(
                 ',',
@@ -256,7 +256,7 @@ if(isset($_POST['EmerDNS'])) {
     //check domain resolv
     if (!empty($EmerDNS)) {
 
-        if ($addresses = Helper::dig($EmerDNS, DNS_EMERCOIN))
+        if ($addresses = Helper::dig($EmerDNS, DNS_EMERCOIN, DNS_DIG_TIME))
         {
             $addresses = implode(
                 ',',
