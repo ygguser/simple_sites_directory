@@ -40,3 +40,5 @@ define(
         'seed1.emercoin.com',
     ]
 );
+
+define('DB_FILE', './../database.db');

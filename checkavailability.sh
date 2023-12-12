@@ -27,9 +27,26 @@ if [ ! -f "$PATHTODB" ]; then echo 'Database file not found!'; exit 1; fi
 DATATOCHECK=$(sqlite3 "$PATHTODB" 'select URL from Sites;')
 #first make HEAD requests, then GET (Not all services respond correctly to the HEAD request (for ex: icecast))
 UNAVAILABLE_HEAD_REQ=$(echo "$DATATOCHECK" | parallel -j 16 checkURL {1} 1)
-if [ ! -z "$UNAVAILABLE_HEAD_REQ" ]
+if [ ! -z "$UNAVAILABLE_HEAD_REQ" ] # [ -z STRING ]	True if the length of "STRING" is zero
 then
     UNAVAILABLE_GET_REQ=$(echo "$UNAVAILABLE_HEAD_REQ" | parallel -j 16 checkURL {1} 0)
+
+    if [ ! -z "$UNAVAILABLE_GET_REQ" ]
+    then
+        echo "Attempt to update the IP addresses of the domains from DNS (ALFIS)..."
+        UNAVAILABLE_GET_REQ_TMP="$UNAVAILABLE_GET_REQ"
+        #try to update URLs with IPv6 addresses from the ALFIS blockchain
+        UNAVAILABLE_GET_REQ=$(php -f "$DIR/php-backend/ygg_update_ips_from_ALFIS.php" "$UNAVAILABLE_GET_REQ")
+        if [ $? -eq 0 ] #exit status of the last command
+        then
+            #last attempt
+            UNAVAILABLE_GET_REQ=$(echo "$UNAVAILABLE_GET_REQ" | parallel -j 16 checkURL {1} 0)
+        else
+            echo "The attempt to update the IP addresses of the domains from DNS failed."
+            echo "$UNAVAILABLE_GET_REQ"; #there should be a description of the error here
+            UNAVAILABLE_GET_REQ="$UNAVAILABLE_GET_REQ_TMP"
+        fi
+    fi
 else
     UNAVAILABLE_GET_REQ="$UNAVAILABLE_HEAD_REQ"
 fi

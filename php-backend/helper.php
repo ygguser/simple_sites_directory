@@ -39,4 +39,40 @@ class Helper
 
         return null;
     }
+
+    public static function url_as_meship(string $url) {
+        $meshname = '';
+        require_once __DIR__ . '/base32.php';
+        $parsed_url = parse_url($url);
+        if ($parsed_url) {
+            $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+            $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+            $url_path = (isset($parsed_url['path']) && $parsed_url['path'] != '/') ? $parsed_url['path'] : '';
+            $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meship' . "$port$url_path";
+        }
+        return $meshname;
+    }
+
+    public static function get_connection_to_db(string $path_to_db_file = '') {
+        $db = NULL;
+
+        $db_file = $path_to_db_file == '' ? DB_FILE : $path_to_db_file;
+        if (!file_exists($db_file)) {
+            echo 'The DB file doesn\'t exist!';
+            //echo "\n"; echo 'Current dir: ' . __DIR__;
+            //echo "\nPath to DB: $db_file\n";
+            return NULL;
+        }
+
+        try {
+            $db = new PDO("sqlite:$db_file");
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo 'Can\'t open database! ';
+            echo $e->getMessage();
+        }
+
+        return $db;
+    }
+
 }

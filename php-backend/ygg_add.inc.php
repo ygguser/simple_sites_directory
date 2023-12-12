@@ -41,17 +41,9 @@ echo '}';
 echo '</style>';
 echo '</head><body style="background-color: #f5f5f0; font-family: sans-serif, Verdana, Arial, Helvetica;">';
 
-$db_file= './../database.db';
-if (!file_exists("$db_file")) {
-    echo 'The DB file doesn\'t exist!';
-    page_end();
-}
-try {
-    $db = new PDO("sqlite:$db_file");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo 'Can\'t open database!<br>';
-    echo $e->getMessage();
+$db = Helper::get_connection_to_db();
+if(is_null($db)) {
+    echo '<br>';
     page_end();
 }
 
@@ -197,15 +189,7 @@ list($scriptPath) = get_included_files();
 $dir = dirname("$scriptPath");
 
 //meshname
-$meshname = '';
-require_once("$dir/../php-backend/base32.php");
-$parsed_url = parse_url($url);
-if ($parsed_url) {
-    $host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-    $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-    $url_path = (isset($parsed_url['path']) && $parsed_url['path'] != '/') ? $parsed_url['path'] : '';
-    $meshname = base32_encode(inet_pton(str_replace('[', '' , str_replace(']', '', $host)))) . '.meship' . "$port$url_path";
-}
+$meshname = Helper::url_as_meship($url);
 
 if ($dname == '' && $EmerDNS == '') {
     $url_p = preg_replace('{/$}', '', $url) . '%';

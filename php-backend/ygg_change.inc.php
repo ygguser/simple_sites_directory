@@ -72,17 +72,10 @@ echo '}';
 echo '</style>';
 echo '</head><body style="background-color: #f5f5f0; font-family: sans-serif, Verdana, Arial, Helvetica;">';
 
-$db_file= './../database.db';
-if (!file_exists("$db_file")) {
-    echo 'The DB file doesn\'t exist!';
-    page_end();
-}
-try {
-    $db = new PDO("sqlite:$db_file");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo 'Can\'t open database!<br>';
-    echo $e->getMessage();
+
+$db = Helper::get_connection_to_db();
+if(is_null($db)){
+    echo '<br>';
     page_end();
 }
 
