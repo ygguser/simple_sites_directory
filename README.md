@@ -12,6 +12,18 @@ How to start using it:
  * The permissions for the files `site/index.html*`, `site/categories.html*` must be that they can be changed from both the cron job and the web server 
  * If you want to receive notifications about changes in the list of sites in [telegram](https://telegram.org/), fill in the parameters in the file `php-backend/ygg_telegram_notify.php`
 
-To manage records in the database it is convenient to use this php-script: https://www.phpliteadmin.org/
+To manually manage records in the database it is convenient to use this php-script: https://www.phpliteadmin.org/ (php-mbstring is required).
+[Here](nginx/sites_dir_psqla.conf) an example of nginx configuration file for working with phpLiteAdmin is provided (see the comments in this file).
+Configure these parameters in the 'phpliteadmin.php' file like this:
+```
+$directory = false;
+
+$databases = array(
+        array(
+                'path'=> '../../database.db',
+                'name'=> 'Database'
+        ),
+);
+```
 
 These scripts are currently used on the [Yggdrasil](https://yggdrasil-network.github.io/) network at this address: http://[21e:a51c:885b:7db0:166e:927:98cd:d186]/
