@@ -13,7 +13,9 @@ How to start using it:
  * If you want to receive notifications about changes in the list of sites in [telegram](https://telegram.org/), fill in the parameters in the file `php-backend/ygg_telegram_notify.php`
 
 To manually manage records in the database it is convenient to use this php-script: https://www.phpliteadmin.org/ (php-mbstring is required).
+
 [Here](nginx/sites_dir_psqla.conf) an example of nginx configuration file for working with phpLiteAdmin is provided (see the comments in this file).
+
 Configure these parameters in the 'phpliteadmin.php' file like this:
 ```
 $directory = false;
