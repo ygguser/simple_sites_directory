@@ -72,7 +72,7 @@ function updateURL($db, $ID, $newURL, $old_meshname, $old_URL) {
             $query = $db->prepare("UPDATE Sites SET URL=:NewURL WHERE ID=:SiteID");
         } else {
             $query = $db->prepare("UPDATE Sites SET URL=:NewURL, meshname=:New_meshname WHERE ID=:SiteID");
-            $query->bindValue(':New_meshaname', $meshname);
+            $query->bindValue(':New_meshname', $meshname);
         }
         $query->bindValue(':NewURL', $newURL);
         $query->bindValue(':SiteID', $ID);
