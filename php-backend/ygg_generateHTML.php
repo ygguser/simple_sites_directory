@@ -217,18 +217,20 @@ while ($row = $result_sites_with_categories->fetchArray()) {
         $categories_html .= '<ul data-role="listview">';
 
         // rss begin (php-backend/ygg_generateRSS.php)
-        $categories_html .= "<a target=\"_blank\" class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" href=\"";
-        $categories_html .= "rss/" . strtolower(
-            trim(
-                preg_replace(
-                    "/\W/ui",
-                    "-",
-                    $category_name
-                ),
-                "-"
-            ) . ".xml"
-        );
-        $categories_html .= "\">RSS</a>";
+        if ($category_name != 'Unsorted') {
+            $categories_html .= "<a target=\"_blank\" class=\"ui-table-columntoggle-btn ui-btn ui-btn-a ui-corner-all ui-shadow ui-mini\" href=\"";
+            $categories_html .= "rss/" . strtolower(
+                trim(
+                    preg_replace(
+                        "/\W/ui",
+                        "-",
+                        $category_name
+                    ),
+                    "-"
+                ) . ".xml"
+            );
+            $categories_html .= "\">RSS</a>";
+        }
         // rss end
 
         //table header
