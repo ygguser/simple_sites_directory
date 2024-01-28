@@ -192,9 +192,11 @@ $dir = dirname("$scriptPath");
 $meshname = Helper::url_as_meship($url);
 
 if ($dname == '' && $EmerDNS == '') {
-    $url_p = preg_replace('{/$}', '', $url) . '%';
+    //$url_p = preg_replace('{/$}', '', $url) . '%';
+    $url_p = $url;
     $nrows = 0;
     try {
+        //$query = $db->prepare('SELECT ID FROM Sites WHERE URL LIKE :url LIMIT 1;');
         $query = $db->prepare('SELECT ID FROM Sites WHERE URL = :url LIMIT 1;');
         $query->bindParam(':url', $url_p);
         $query->execute();
