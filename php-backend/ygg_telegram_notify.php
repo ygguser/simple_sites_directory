@@ -32,7 +32,7 @@ function tlgNotify($msg, $url, $description) {
         // ---> through tor
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Content-Length: ' . strlen($dataToSend)],
-        CURLOPT_POSTFIELDS=> $dataToSend,
+        CURLOPT_POSTFIELDS => $dataToSend,
     ]);
     
     try {
