@@ -18,20 +18,22 @@ function tlgNotify($msg, $url, $description) {
     ));
     
     $curlInit = curl_init();
-    curl_setopt($curlInit, CURLOPT_URL, "$bot_url");
-    curl_setopt($curlInit, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($curlInit, CURLOPT_TIMEOUT, 20);
-    curl_setopt($curlInit, CURLOPT_HEADER, false);
-    curl_setopt($curlInit, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curlInit, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($curlInit, CURLOPT_FOLLOWLOCATION, true);
-    // --- through tor
-    //curl_setopt($curlInit, CURLOPT_PROXYTYPE, 7);//CURLPROXY_SOCKS5_HOSTNAME
-    //curl_setopt($curlInit, CURLOPT_PROXY, '192.168.1.2:9051');
-    // ---
-    curl_setopt($curlInit, CURLOPT_POST, true);
-    curl_setopt($curlInit, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($dataToSend)]);
-    curl_setopt($curlInit, CURLOPT_POSTFIELDS, $dataToSend);
+    curl_setopt_array($curlInit, [
+        CURLOPT_URL => "$bot_url",
+        CURLOPT_CONNECTTIMEOUT => 10,                      
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_FOLLOWLOCATION => true ,
+        // <--- through tor
+        //CURLOPT_PROXYTYPE => 7, //CURLPROXY_SOCKS5_HOSTNAME
+        //CURLOPT_PROXY => '192.168.1.2:9051',
+        // ---> through tor
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Content-Length: ' . strlen($dataToSend)],
+        CURLOPT_POSTFIELDS=> $dataToSend,
+    ]);
     
     try {
         $response = curl_exec($curlInit);
