@@ -10,6 +10,13 @@ function tlgNotify($msg, $url, $description) {
     if ($chat_id == '-1')
         return;
 
+    $dataToSend = json_encode(array (
+        'chat_id' => "$chat_id",
+        'disable_web_page_preview' => '1',
+        //"parse_mode" => "Markdown",
+        "text" => "$msg\r\n$url\r\n$description\r\n"
+    ));
+    
     $curlInit = curl_init();
     curl_setopt($curlInit, CURLOPT_URL, "$bot_url");
     curl_setopt($curlInit, CURLOPT_CONNECTTIMEOUT, 10);
@@ -23,13 +30,9 @@ function tlgNotify($msg, $url, $description) {
     //curl_setopt($curlInit, CURLOPT_PROXY, '192.168.1.2:9051');
     // ---
     curl_setopt($curlInit, CURLOPT_POST, true);
-    $dataToSend = array (
-        'chat_id' => "$chat_id",
-        'disable_web_page_preview' => '1',
-        //"parse_mode" => "Markdown",
-        "text" => "$msg\r\n$url\r\n$description\r\n"
-    );
+    curl_setopt($curlInit, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . strlen($dataToSend)]);
     curl_setopt($curlInit, CURLOPT_POSTFIELDS, $dataToSend);
+    
     try {
         $response = curl_exec($curlInit);
     } catch (Exception $e) {
