@@ -3,7 +3,7 @@
 function nostrNotify(string $msg, string $url, string $description): void
 {
     // --- $sec must never be exposed, committed, or disclosed to anyone.
-    // $sec = 'nsec1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+    $sec = 'nsec1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
     $relays = 'wss://nostr.twinkle.lol wss://nos.lol';
 
     $safeDescription = html_entity_decode(
