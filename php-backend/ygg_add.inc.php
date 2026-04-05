@@ -328,6 +328,16 @@ if(file_exists("$scriptName")) {
 }
 // --- matrix notify
 
+// --- nostr notify
+$scriptName = "$dir/../php-backend/ygg_nostr_notify.php";
+if(file_exists("$scriptName")) {
+    require_once("$scriptName");
+    if (function_exists('nostrNotify')) {
+        nostrNotify('A new site has been added:', $url, $description);
+    }
+}
+// --- nostr notify
+
 page_end();
 
 ?>
