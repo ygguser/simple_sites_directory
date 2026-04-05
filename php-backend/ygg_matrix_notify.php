@@ -94,7 +94,7 @@ function mtrxNotify($msg, $url, $description) {
     curl_setopt($curlInit, CURLOPT_POSTFIELDS, json_encode($dataToSend));
     try {
         $response = curl_exec($curlInit);
-        error_log("mtrx: $response");
+        //error_log("mtrx: $response");
     } catch (Exception $e) {
         error_log("mtrx_err: $e");
     }
