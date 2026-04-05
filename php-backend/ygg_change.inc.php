@@ -52,6 +52,17 @@ function regen_and_notify($url, $description, $site_deletion = false) {
     }
     // --- matrix notify
 
+	// --- nostr notify
+    $scriptName = "$dir/../php-backend/ygg_nostr_notify.php";
+    if(file_exists("$scriptName")) {
+        require_once("$scriptName");
+        if (function_exists('nostrNotify')) {
+            $msg = 'Site data has been changed' . ($site_deletion === false ? '' : ' (deletion)') . ':';
+            nostrNotify($msg, $url, $description);
+        }
+    }
+    // --- nostr notify
+
 }
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
